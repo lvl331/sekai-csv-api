@@ -3,6 +3,14 @@ const fs = require('fs');
 const csv = require('csv-parser');
 
 exports.handler = async function(event, context) {
+  // CORSヘッダーの設定
+  const headers = {
+    'Access-Control-Allow-Origin': '*',  // 任意のオリジンを許可
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',  // 許可するHTTPメソッド
+    'Access-Control-Allow-Headers': 'Content-Type',  // 許可するヘッダー
+  };
+
+  // CSVファイルの内容を格納するオブジェクト
   const results = {
     music_info: [],
     solo_live_data: [],
@@ -31,11 +39,13 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 200,
+      headers: headers,  // CORSヘッダーを返す
       body: JSON.stringify(results),  // 4つのCSVファイルの内容を1つのJSONで返す
     };
   } catch (err) {
     return {
       statusCode: 500,
+      headers: headers,  // CORSヘッダーを返す
       body: JSON.stringify({ error: 'Error reading CSV files', details: err.message }),
     };
   }
