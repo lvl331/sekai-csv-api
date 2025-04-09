@@ -38,10 +38,9 @@ exports.handler = async function(event, context) {
   try {
     // GitHub上のCSVファイルを順番に読み込む
     results.music_info = await readCSVFromGitHub(githubCSVUrl);
-    // 他のCSVファイルも同様に読み込む
-    // results.solo_live_data = await readCSVFromGitHub(githubCSVUrl2);
-    // results.multi_live_data_1 = await readCSVFromGitHub(githubCSVUrl3);
-    // results.multi_live_data_2 = await readCSVFromGitHub(githubCSVUrl4);
+    results.solo_live_data = await readCSVFromGitHub(githubCSVUrl2);
+    results.multi_live_data_1 = await readCSVFromGitHub(githubCSVUrl3);
+    results.multi_live_data_2 = await readCSVFromGitHub(githubCSVUrl4);
 
     return {
       statusCode: 200,
