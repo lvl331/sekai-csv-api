@@ -3,8 +3,10 @@ const https = require('https');
 const csv = require('csv-parser');
 
 // GitHubリポジトリ上のCSVファイルのURL
-const githubCSVUrl = 'https://raw.githubusercontent.com/yourusername/sekai-csv-api/main/music_info.csv';
-
+const githubCSVUrl1 = 'https://raw.githubusercontent.com/yourusername/sekai-csv-api/main/music_info.csv';
+const githubCSVUrl2 = 'https://raw.githubusercontent.com/yourusername/sekai-csv-api/main/solo_live_data.csv';
+const githubCSVUrl3 = 'https://raw.githubusercontent.com/yourusername/sekai-csv-api/main/multi_live_data_1.csv';
+const githubCSVUrl4 = 'https://raw.githubusercontent.com/yourusername/sekai-csv-api/main/multi_live_data_2.csv';
 exports.handler = async function(event, context) {
   // CORSヘッダーの設定
   const headers = {
@@ -37,7 +39,7 @@ exports.handler = async function(event, context) {
 
   try {
     // GitHub上のCSVファイルを順番に読み込む
-    results.music_info = await readCSVFromGitHub(githubCSVUrl);
+    results.music_info = await readCSVFromGitHub(githubCSVUrl1);
     results.solo_live_data = await readCSVFromGitHub(githubCSVUrl2);
     results.multi_live_data_1 = await readCSVFromGitHub(githubCSVUrl3);
     results.multi_live_data_2 = await readCSVFromGitHub(githubCSVUrl4);
