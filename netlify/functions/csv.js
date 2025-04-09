@@ -1,6 +1,9 @@
 // netlify/functions/csv.js
-const fs = require('fs');
+const https = require('https');
 const csv = require('csv-parser');
+
+// GitHubリポジトリ上のCSVファイルのURL
+const githubCSVUrl = 'https://raw.githubusercontent.com/yourusername/sekai-csv-api/main/music_info.csv';
 
 exports.handler = async function(event, context) {
   // CORSヘッダーの設定
@@ -18,24 +21,27 @@ exports.handler = async function(event, context) {
     multi_live_data_2: []
   };
 
-  // CSVファイルを読み込む関数
-  const readCSV = (filePath) => {
+  // GitHubからCSVファイルを読み込む関数
+  const readCSVFromGitHub = (url) => {
     return new Promise((resolve, reject) => {
       const data = [];
-      fs.createReadStream(filePath)
-        .pipe(csv())
-        .on('data', (row) => data.push(row))
-        .on('end', () => resolve(data))
-        .on('error', (err) => reject(err));
+      https.get(url, (response) => {
+        response
+          .pipe(csv())
+          .on('data', (row) => data.push(row))
+          .on('end', () => resolve(data))
+          .on('error', (err) => reject(err));
+      });
     });
   };
 
   try {
-    // 各CSVファイルを順番に読み込む
-    results.music_info = await readCSV('./music_info.csv');
-    results.solo_live_data = await readCSV('./solo_live_data.csv');
-    results.multi_live_data_1 = await readCSV('./multi_live_data_1.csv');
-    results.multi_live_data_2 = await readCSV('./multi_live_data_2.csv');
+    // GitHub上のCSVファイルを順番に読み込む
+    results.music_info = await readCSVFromGitHub(githubCSVUrl);
+    // 他のCSVファイルも同様に読み込む
+    // results.solo_live_data = await readCSVFromGitHub(githubCSVUrl2);
+    // results.multi_live_data_1 = await readCSVFromGitHub(githubCSVUrl3);
+    // results.multi_live_data_2 = await readCSVFromGitHub(githubCSVUrl4);
 
     return {
       statusCode: 200,
